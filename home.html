@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pathao KBS</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3557/3557613.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto Condensed', sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #080f14;
+      color: #ffffff;
+    }
+
+    .header {
+      background-color: #a80f12;
+      color: #ffffff;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-bar {
+      position: relative;
+      margin: 1rem 0;
+      border-radius: 5px;
+    }
+
+    .search-bar input {
+      padding: 0.8rem;
+      border: 3px solid #111111;
+      border-radius: 5px;
+      font-size: 1rem;
+      height: 50px;
+      width: 500px;
+      background-color: #ffffff;
+      color: rgb(53, 53, 53);
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .back-button, .search-button, .communications-button {
+      padding: 0.5rem 1rem;
+      background-color: #800101fb;
+      color: rgb(255, 255, 255);
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      border-radius: 3px;
+      font-size: 0.9rem;
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .back-button:hover, .search-button:hover, .communications-button:hover {
+      background-color: #1f0000;
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .article-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      padding: 0;
+      list-style-type: none;
+      text-transform: uppercase;
+      align-items: start;
+    }
+
+    .article-item {
+      background-color: #163042;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 5px 10px #0b0c0f;
+      cursor: pointer;
+      transition: box-shadow 0.1s, background-color 0.1s, transform 0.1s;
+      display: flex;
+      flex-direction: column;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .article-item:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      background-color: #7e0b0b;
+      color: #ffffff;
+      transform: scale(0.95);
+    }
+
+    .article-item h3 {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .article-item p {
+      margin: 0.5rem 0;
+      flex-grow: 1;
+    }
+
+    .article-item .verticals {
+      font-size: 0.7rem;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .article-item .callerTypes {
+      font-size: 0.7rem;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .article-item:hover .verticals {
+      color: #ffffff;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+      text-transform: uppercase;
+    }
+
+    .tab-button, .caller-type-button {
+      padding: 0.5rem 1rem;
+      background-color: #8d0303;
+      color: rgb(255, 255, 255);
+      border: none;
+      cursor: pointer;
+      margin: 0.25rem;
+      text-transform: uppercase;
+      border-radius: 3px;
+      font-size: 0.9rem;
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .tab-button.active, .caller-type-button.active {
+      background-color: #1f0000;
+      font-weight: bold;
+    }
+
+    .tab-content {
+      display: none;
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-content h3,
+    .tab-content h4 {
+      font-size: 1.5rem;
+    }
+
+    .tab-content p,
+    .tab-content ul {
+      font-size: 1.2rem;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0 1rem;
+    }
+
+    ul li {
+      margin: 0.5rem 0;
+    }
+
+    .caller-types {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+
+    .filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+  font-family: 'Roboto Condensed', sans-serif;
+  align-items: center; /* Align children vertically in the center */
+}
+
+.filter-select, .communications-button {
+  padding: 0.5rem 1rem; /* Adjust padding to create consistent height */
+  background-color: #7e0b0b;
+  color: black;
+  border: none;
+  border-radius: 3px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: white;
+  font-family: 'Roboto Condensed', sans-serif;
+  height: 40px; /* Set height for both elements */
+  display: flex; /* Ensures contents are centered vertically */
+  align-items: center; /* Vertically center the content */
+}
+
+.filter-select:hover, .communications-button:hover {
+  background-color: #1a1a1a;
+  color: rgb(255, 255, 255);
+}
+
+.filter-select option {
+  background-color: #111111;
+  color: rgb(255, 255, 255);
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.filter-select option:hover {
+  background-color: #a80f12;
+}
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .article-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    .article-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .article-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      color: white;
+    }
+
+    .article-table th,
+    .article-table td {
+      border: 3px solid #2f3542;
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    .article-table th {
+      background-color: #2f3542;
+      color: white;
+      font-weight: bold;
+    }
+
+    .article-table ul {
+      margin: 0;
+      padding-left: 1.5rem;
+    }
+
+    .article-table img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .article-table .remarks {
+      background-color: #3a3f4b;
+    }
+
+    .article-table .remarks ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .article-table .remarks li::before {
+      content: "• ";
+      color: #a80f12;
+    }
+
+    .custom-article {
+      color: #ffffff;
+      border-radius: 8px;
+    }
+
+    .custom-article h2 {
+      color: #ffffff;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .custom-sections {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .custom-section {
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-section h3 {
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .custom-section p {
+      color: #ffffff;
+      line-height: 1.6;
+    }
+
+    .custom-section ul {
+      list-style-type: none;
+      padding-left: 0;
+      color: #ffffff;
+    }
+
+    .custom-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      background-color: #163042;
+      color: #ffffff;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 2px solid white;
+    }
+
+    .custom-table th {
+      border: 2px solid #ffffff;
+      background-color: #720303;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .custom-table td {
+      border: 2px solid white;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .related-articles {
+      margin-top: 5rem;
+      padding: 1.5rem;
+      background-color: #163042;
+      border: 3px solid #000000;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    }
+
+    .related-articles h3 {
+      margin-top: 0;
+      color: #ffffff;
+      font-size: 1.6rem;
+      font-weight: 600;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .related-articles ul {
+      list-style-type: none;
+      padding-left: 0;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+
+    .related-articles li {
+      margin-bottom: 0.8rem; 
+    }
+
+    .related-articles a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: color 0.3s ease, text-decoration 0.3s ease;
+    }
+
+    .related-articles a:hover {
+      color: #a80f12; 
+      text-decoration: underline;
+    }
+
+    .related-articles a:focus {
+      outline: 2px solid #a80f12; 
+    }
+
+    .related-articles li:last-child {
+      margin-bottom: 0; 
+    }
+
+    .footer{
+      background-color: #a80f12;
+      text-align: center;
+      padding: 0.7rem 0; 
+      font-size: 14px; color: #ffffff;
+    }
+
+    .attachments-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .attachment-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 2px solid #a80f12;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .image-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content {
+      display: block;
+      margin: auto;
+      max-width: 90%;
+      max-height: 90%;
+      border: 2px solid white;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 15px;
+      right: 30px;
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      background-color: crimson;
+      color: white;
+      cursor: pointer;
+      margin: 0.25rem;
+      text-transform: uppercase;
+      border-radius: 3px;
+      font-family: 'Roboto Condensed', sans-serif;
+    }
+
+    .caller-type {
+      display: inline-block;
+      background-color: #2c3e50;
+      color: #ffffff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      margin: 0.1rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    .article-item:hover .caller-type {
+      background-color: #ffffff;
+      color: #a80f12;
+    }
+
+    .vertical-tag {
+      display: inline-block;
+      background-color: #2c3e50;
+      color: #ffffff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      margin: 0.1rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .article-item:hover .vertical-tag {
+      background-color: #ffffff;
+      color: #a80f12;
+    }
+
+    .communications-button {
+  background-color: #800101fb;
+  font-weight: normal; /* Ensure text weight stays normal */
+}
+.communications-item:hover {
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      background-color: #7e0b0b;
+      color: #ffffff;
+      transform: scale(0.99);
+    }
+
+.communications-button:hover {
+  background-color: #1f0000;
+  font-weight: bold;
+}
+    #communications-title {
+      margin: 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+    .posted-on, .last-updated {
+      font-style: italic;
+      margin-bottom: 0.5rem;
+      color: yellow;
+    }
+    body, .custom-article, .article-content, .article-item {
+      font-family: 'Roboto Condensed', 'Tiro Bangla', sans-serif;
+    }
+
+    .bangla {
+      font-family: 'Tiro Bangla', sans-serif;
+    }
+
+    #communications-section {
+  display: none; /* Keep hidden initially */
+  overflow-y: auto;
+}
+
+/* Added CSS for communications list */
+.communications-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.communications-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #163042;
+  margin-bottom: 0.5rem;  /* Reduced bottom margin */
+  padding: 0.2rem 0.5rem;  /* Further reduced padding */
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  line-height: 1;  /* Reduced line-height for tighter spacing */
+}
+
+
+.communications-item:hover {
+  background-color: #7e0b0b;
+}
+
+.communications-item-content {
+  flex-grow: 1;
+}
+
+.communications-item .posted-on {
+  font-size: 0.9rem;
+  color: #ffd900;
+  white-space: nowrap;
+  
+}
+.communications-item:hover .vertical-tag {
+      background-color: #ffffff;
+      color: #a80f12;
+    }
+    .communications-item:hover .caller-type {
+      background-color: #ffffff;
+      color: #a80f12;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header section -->
+  <header class="header">
+    <div class="header-content">
+      <div id="search-filters">
+        <h1 id="main-title">KNOWLEDGE BASE SYSTEM</h1>
+        <div class="search-bar">
+          <input type="search" id="search" placeholder="Search all articles..." />
+        </div>
+       
+        <div id="filters" class="filters">
+          <select id="vertical-filter" class="filter-select">
+            <option value="">ALL VERTICALS</option>
+          </select>
+          <select id="caller-type-filter" class="filter-select">
+            <option value="">ALL CALLER TYPES</option>
+          </select>
+          <button class="communications-button" onclick="showCommunications()">📢 Communications</button>
+        </div>
+      </div>
+      <div id="article-header" class="article-header" style="display: none;">
+        <div class="header-buttons">
+          <button class="back-button" onclick="goBack()">◀ Back</button>
+          <h1 id="header-title">KBS</h1> 
+          <button class="search-button" onclick="goToSearch()">🔎 Search</button>
+        </div>
+        <div id="tabs-container" class="article-tabs"></div>
+        <div id="caller-types-container" class="caller-types"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content section -->
+  <main>
+    <div id="content"></div>
+    <div id="communications-section" style="display: none;">
+      <div class="header-content">
+        <div class="header-buttons">
+          <button class="back-button" onclick="goBackFromCommunications()">◀ Back</button>
+          <h1 id="communications-title">CENTRAL COMMUNICATIONS</h1>
+          <button class="search-button" onclick="goToCommunicationsSearch()">🔎 Search</button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input type="search" id="communications-search" placeholder="Search communications..." 
+        style="display: block; margin: 0 auto; text-align: center;" />
+       </div>
+      <div id="communications-filters" class="filters">
+        <select id="communications-vertical-filter" class="filter-select">
+          <option value="">ALL VERTICALS</option>
+        </select>
+        <select id="communications-caller-type-filter" class="filter-select">
+          <option value="">ALL CALLER TYPES</option>
+        </select>
+      </div>
+      <div id="communications-list"></div>
+    </div>
+  </main>
+
+  <!-- Image Modal -->
+  <div id="image-modal" class="image-modal">
+    <span class="close-button" onclick="closeModal()">&times;</span>
+    <img id="modal-image" class="modal-content">
+  </div>
+
+  <footer class="footer">
+    Developed with ❤ by Aminul Islam
+  </footer>
+
+  <script>
+    // Sample article data with updated custom article structure
+    let articles = [];
+    let communicationsArticles = [];
+
+    // Emoji mapping for verticals
+    const verticalEmojis = {
+      food: "🍎", ride: "🛵", car: "🚗", parcel: "📦",
+      courier: "🚚", dp: "💳", bnpl: "💸", shop: "🛒", others: "🌟"
+    };
+
+    // List of all possible caller types
+    const allCallerTypes = ["User", "Captain", "Rider", "Foodman", "Merchant", "Customer", "Restaurant"];
+
+    let currentArticle = null;
+    let currentVertical = null;
+    let currentCallerType = null;
+
+    async function fetchArticles() {
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwja-3RwJFqrV_d0E0ms9ijfvC_BZ2T0bgliFXmwFTA1VAaicvUEVp8pBZjktuPC-pv/exec';
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const data = await response.json();
+        articles = data.filter(article => article.type !== 'communication');
+        communicationsArticles = data.filter(article => article.type === 'communication');
+        init();
+      } catch (error) {
+        console.error('Error fetching articles:', error);
+      }
+    }
+
+    function init() {
+      populateFilters();
+      populateCommunicationsFilters();
+      renderArticleList();
+      setupEventListeners();
+    }
+
+    function populateFilters() {
+      const verticalFilter = document.getElementById('vertical-filter');
+      const callerTypeFilter = document.getElementById('caller-type-filter');
+
+      const allVerticals = new Set(articles.flatMap(article => article.verticals || []));
+      allVerticals.forEach(vertical => {
+        const option = document.createElement('option');
+        option.value = vertical;
+        option.textContent = `${verticalEmojis[vertical] || ''} ${vertical.toUpperCase()}`;
+        verticalFilter.appendChild(option);
+      });
+
+      allCallerTypes.forEach(callerType => {
+        const option = document.createElement('option');
+        option.value = callerType;
+        option.textContent = callerType.toUpperCase();
+        callerTypeFilter.appendChild(option);
+      });
+    }
+
+    function populateCommunicationsFilters() {
+      const verticalFilter = document.getElementById('communications-vertical-filter');
+      const callerTypeFilter = document.getElementById('communications-caller-type-filter');
+
+      const allVerticals = new Set(communicationsArticles.flatMap(article => article.verticals || []));
+      allVerticals.forEach(vertical => {
+        const option = document.createElement('option');
+        option.value = vertical;
+        option.textContent = `${verticalEmojis[vertical] || ''} ${vertical.toUpperCase()}`;
+        verticalFilter.appendChild(option);
+      });
+
+      const allCallerTypes = new Set(communicationsArticles.flatMap(article => article.callerTypes || []));
+      allCallerTypes.forEach(callerType => {
+        const option = document.createElement('option');
+        option.value = callerType;
+        option.textContent = callerType.toUpperCase();
+        callerTypeFilter.appendChild(option);
+      });
+    }
+
+    function setupEventListeners() {
+      document.getElementById('search').addEventListener('input', handleSearch);
+      document.getElementById('vertical-filter').addEventListener('change', handleSearch);
+      document.getElementById('caller-type-filter').addEventListener('change', handleSearch);
+      document.getElementById('communications-search').addEventListener('input', handleCommunicationsSearch);
+      document.getElementById('communications-vertical-filter').addEventListener('change', handleCommunicationsSearch);
+      document.getElementById('communications-caller-type-filter').addEventListener('change', handleCommunicationsSearch);
+    }
+
+    function handleSearch() {
+  const searchQuery = document.getElementById('search').value.toLowerCase().trim();
+  const verticalFilter = document.getElementById('vertical-filter').value;
+  const callerTypeFilter = document.getElementById('caller-type-filter').value;
+
+  const searchKeywords = searchQuery.split(' ').filter(keyword => keyword.length > 0);
+
+  const searchResults = articles.filter(article => {
+    const titleMatch = searchKeywords.every(keyword => article.title.toLowerCase().includes(keyword));
+    const verticalMatch = !verticalFilter || article.verticals?.includes(verticalFilter);
+    const callerTypeMatch = !callerTypeFilter || article.callerTypes?.includes(callerTypeFilter);
+
+    let contentMatch = false;
+    if (article.type === "custom") {
+      contentMatch = searchKeywords.every(keyword =>
+        article.content.toLowerCase().includes(keyword)
+      );
+    } else {
+      contentMatch = Object.entries(article.content || {}).some(([vertical, callerTypes]) => {
+        if (verticalFilter && vertical !== verticalFilter) return false;
+        return Object.entries(callerTypes || {}).some(([callerType, content]) => {
+          if (callerTypeFilter && callerType !== callerTypeFilter) return false;
+          const fieldsToSearch = [
+            content.background,
+            content.todo,
+            content.notes,
+            content.attachments,
+            content.remarks
+          ];
+          return searchKeywords.every(keyword =>
+            fieldsToSearch.some(field =>
+              field && field.toLowerCase().includes(keyword)
+            )
+          );
+        });
+      });
+    }
+
+    return (titleMatch || contentMatch) && verticalMatch && callerTypeMatch;
+  });
+
+  // Sort results: prioritize articles with title matches
+  searchResults.sort((a, b) => {
+    const aTitleMatch = searchKeywords.every(keyword => a.title.toLowerCase().includes(keyword));
+    const bTitleMatch = searchKeywords.every(keyword => b.title.toLowerCase().includes(keyword));
+    return bTitleMatch - aTitleMatch; // Sort so articles with title match come first
+  });
+
+  renderArticleList(searchResults);
+}
+
+function handleCommunicationsSearch() {
+  const searchQuery = document.getElementById('communications-search').value.toLowerCase().trim();
+  const verticalFilter = document.getElementById('communications-vertical-filter').value;
+  const callerTypeFilter = document.getElementById('communications-caller-type-filter').value;
+
+  const searchKeywords = searchQuery.split(' ').filter(keyword => keyword.length > 0);
+
+  const searchResults = communicationsArticles.filter(article => {
+    const titleMatch = searchKeywords.every(keyword => article.title.toLowerCase().includes(keyword));
+    let contentMatch = false;
+    const verticalMatch = !verticalFilter || article.verticals?.includes(verticalFilter);
+    let callerTypeMatch = !callerTypeFilter;
+
+    if (article.type === "custom") {
+      contentMatch = searchKeywords.every(keyword =>
+        article.content.toLowerCase().includes(keyword)
+      );
+      if (callerTypeFilter) {
+        callerTypeMatch = article.callerTypes && article.callerTypes.includes(callerTypeFilter);
+      }
+    } else {
+      contentMatch = Object.entries(article.content || {}).some(([vertical, callerTypes]) => {
+        if (verticalFilter && vertical !== verticalFilter) return false;
+        return Object.entries(callerTypes || {}).some(([callerType, content]) => {
+          if (callerTypeFilter && callerType !== callerTypeFilter) return false;
+          callerTypeMatch = callerTypeMatch || (callerType === callerTypeFilter);
+          const fieldsToSearch = [
+            content.background,
+            content.todo,
+            content.notes,
+            content.attachments,
+            content.remarks
+          ];
+          return searchKeywords.every(keyword =>
+            fieldsToSearch.some(field =>
+              field && field.toLowerCase().includes(keyword)
+            )
+          );
+        });
+      });
+    }
+
+    return (titleMatch || contentMatch) && verticalMatch && callerTypeMatch;
+  });
+
+  // Sort results: prioritize articles with title matches
+  searchResults.sort((a, b) => {
+    const aTitleMatch = searchKeywords.every(keyword => a.title.toLowerCase().includes(keyword));
+    const bTitleMatch = searchKeywords.every(keyword => b.title.toLowerCase().includes(keyword));
+
+    // If both a and b have title matches, keep them in their order
+    // Otherwise, articles with title matches come first
+    if (aTitleMatch && !bTitleMatch) {
+      return -1; // a comes first
+    } else if (!aTitleMatch && bTitleMatch) {
+      return 1; // b comes first
+    } else {
+      return 0; // No change, both are either matched or unmatched
+    }
+  });
+
+  renderCommunicationsList(searchResults);
+}
+
+
+
+    function renderArticleList(articlesToRender = articles) {
+      const content = document.getElementById('content');
+      content.innerHTML = '';
+
+      if (articlesToRender.length === 0) {
+        content.innerHTML = '<h1 style="text-align: center;">No articles found matching your search criteria.☹️<br>Try searching with another keyword <br><br><br>Leave a feedback</h1>';
+        return;
+      }
+
+      const articleList = document.createElement('ul');
+      articleList.className = 'article-list';
+
+      articlesToRender.forEach(article => {
+        const li = document.createElement('li');
+        li.className = 'article-item';
+
+        const verticalsContent = article.verticals
+          .map(v => `<span class="vertical-tag">${verticalEmojis[v] || ''} ${wrapBanglaText(v)}</span>`)
+          .join('');
+
+        let callerTypes = [];
+        if (article.type === 'custom') {
+          callerTypes = article.callerTypes || [];
+        } else {
+          callerTypes = Object.keys(article.content[article.verticals[0]]);
+        }
+        const callerTypesContent = callerTypes
+          .map(ct => `<span class="caller-type">${wrapBanglaText(ct)}</span>`)
+          .join('');
+
+        li.innerHTML = `
+          <h3>${wrapBanglaText(article.title)}</h3>
+          <p class="verticals">${verticalsContent}</p>
+          <p class="callerTypes">${callerTypesContent}</p>
+        `;
+
+        li.addEventListener('click', () => showArticle(article.title));
+        articleList.appendChild(li);
+      });
+
+      content.appendChild(articleList);
+    }
+
+    function showArticle(articleTitle) {
+      currentArticle = articles.find(a => a.title === articleTitle);
+
+      if (!currentArticle) {
+        console.error('Article not found:', articleTitle);
+        return;
+      }
+
+      document.getElementById('search-filters').style.display = 'none';
+      document.getElementById('article-header').style.display = 'flex';
+      document.getElementById('header-title').textContent = currentArticle.title;
+
+      document.getElementById('tabs-container').style.display = 'flex';
+      document.getElementById('caller-types-container').style.display = 'flex';
+
+      currentVertical = currentArticle.verticals[0];
+      currentCallerType = currentArticle.type === 'custom' ? (currentArticle.callerTypes && currentArticle.callerTypes.length > 0 ? currentArticle.callerTypes[0] : null) : Object.keys(currentArticle.content[currentVertical])[0];
+
+      renderTabs();
+      renderCallerTypes();
+      renderArticleContent();
+    }
+
+    function renderTabs() {
+      const tabsContainer = document.getElementById('tabs-container');
+      tabsContainer.innerHTML = '';
+
+      currentArticle.verticals.forEach(vertical => {
+        const button = document.createElement('button');
+        button.className = `tab-button ${vertical === currentVertical ? 'active' : ''}`;
+        button.textContent = `${verticalEmojis[vertical] || ''} ${vertical.toUpperCase()}`;
+        button.addEventListener('click', () => {
+          currentVertical = vertical;
+          if (currentArticle.type !== 'custom') {
+            currentCallerType = Object.keys(currentArticle.content[currentVertical])[0];
+          }
+          renderTabs();
+          renderCallerTypes();
+          renderArticleContent();
+        });
+        tabsContainer.appendChild(button);
+      });
+    }
+
+    function renderCallerTypes() {
+      const callerTypesContainer = document.getElementById('caller-types-container');
+      callerTypesContainer.innerHTML = '';
+
+      if (currentArticle.type === 'custom') {
+        const allCallerTypes = currentArticle.callerTypes || [];
+        
+        allCallerTypes.forEach(callerType => {
+          const button = document.createElement('button');
+          button.className = `caller-type-button ${callerType === currentCallerType ? 'active' : ''}`;
+          button.textContent = callerType.toUpperCase();
+          button.addEventListener('click', () => {
+            currentCallerType = callerType;
+            renderCallerTypes();
+            renderArticleContent();
+          });
+          callerTypesContainer.appendChild(button);
+        });
+      } else {
+        Object.keys(currentArticle.content[currentVertical]).forEach(callerType => {
+          const button = document.createElement('button');
+          button.className = `caller-type-button ${callerType === currentCallerType ? 'active' : ''}`;
+          button.textContent = callerType.toUpperCase();
+          button.addEventListener('click', () => {
+            currentCallerType = callerType;
+            renderCallerTypes();
+            renderArticleContent();
+          });
+          callerTypesContainer.appendChild(button);
+        });
+      }
+    }
+
+    function renderArticleContent() {
+      const content = document.getElementById('content');
+      content.innerHTML = '';
+
+      const lastUpdatedHtml = currentArticle.lastUpdated ? `<p class="last-updated">Last updated: ${currentArticle.lastUpdated}</p>` : '';
+
+      if (currentArticle.type === "custom") {
+        content.innerHTML = `
+          ${lastUpdatedHtml}
+          <div class="custom-article">
+            ${wrapBanglaText(currentArticle.content)}
+          </div>
+        `;
+        
+        if (currentArticle.relatedArticles && currentArticle.relatedArticles.length > 0) {
+          const relatedArticlesSection = document.createElement('div');
+          relatedArticlesSection.className = 'related-articles';
+          relatedArticlesSection.innerHTML = `
+            <h3>Related Articles 📖</h3>
+            <ul>
+              ${currentArticle.relatedArticles.map(article => `
+                <li><a href="#" onclick="showArticle('${article}'); return false;">${article}</a></li>
+              `).join('')}
+            </ul>
+          `;
+          content.appendChild(relatedArticlesSection);
+        }
+      } else {
+        const articleContent = currentArticle.content[currentVertical][currentCallerType];
+
+        const articleHTML = `
+          ${lastUpdatedHtml}
+          <div class="article-content">
+            <table class="custom-table">
+              <tr>
+                <th>Background</th>
+                <td>${wrapBanglaText(articleContent.background)}</td>
+              </tr>
+              <tr>
+                <th>To-Do</th>
+                <td>${wrapBanglaText(articleContent.todo)}</td>
+              </tr>
+              <tr>
+                <th>Notes</th>
+                <td>${wrapBanglaText(articleContent.notes)}</td>
+              </tr>
+              ${articleContent.attachments ? `
+                <tr>
+                  <th>Attachments</th>
+                  <td>${articleContent.attachments.split(',').map(attachment => 
+                    `<img src="${attachment.trim()}" alt="Attachment" class="attachment-image" onclick="viewImage('${attachment.trim()}')">`
+                  ).join('')}
+                  </td>
+                </tr>
+              ` : ''}
+              <tr>
+                <th>Remarks</th>
+                <td>${wrapBanglaText(articleContent.remarks)}</td>
+              </tr>
+            </table>
+          </div>
+        `;
+        
+        content.innerHTML = articleHTML;
+
+        if (currentArticle.relatedArticles && currentArticle.relatedArticles.length > 0) {
+          const relatedArticlesSection = document.createElement('div');
+          relatedArticlesSection.className = 'related-articles';
+          relatedArticlesSection.innerHTML = `
+            <h3>Related Articles 📖</h3>
+            <ul>
+              ${currentArticle.relatedArticles.map(article => `
+                <li><a href="#" onclick="showArticle('${article}'); return false;">${article}</a></li>
+              `).join('')}
+            </ul>
+          `;
+          content.appendChild(relatedArticlesSection);
+        }
+      }
+    }
+
+    function showCommunications() {
+      document.getElementById('search-filters').style.display = 'none';
+      document.getElementById('article-header').style.display = 'none';
+      document.getElementById('content').style.display = 'none';
+      document.getElementById('communications-section').style.display = 'block';
+      renderCommunicationsList();
+    }
+
+    function renderCommunicationsList(communicationsToRender = communicationsArticles) {
+      const communicationsList = document.getElementById('communications-list');
+      communicationsList.innerHTML = '';
+
+      if (communicationsToRender.length === 0) {
+        content.innerHTML = '<h1 style="text-align: center;">No communications found matching your search criteria.☹️<br>Try searching with another keyword <br><br><br>Leave a feedback</h1>';
+        return;
+      }
+
+      const articleList = document.createElement('ul');
+      articleList.className = 'communications-list';
+
+      communicationsToRender.sort((a, b) => new Date(b.postedOn) - new Date(a.postedOn));
+
+      communicationsToRender.forEach(article => {
+        const li = document.createElement('li');
+        li.className = 'communications-item';
+
+        const verticalsContent = article.verticals
+          .map(v => `<span class="vertical-tag">${verticalEmojis[v] || ''} ${wrapBanglaText(v)}</span>`)
+          .join('');
+
+        const callerTypesContent = article.callerTypes
+          .map(ct => `<span class="caller-type">${wrapBanglaText(ct)}</span>`)
+          .join('');
+
+        li.innerHTML = `
+          <div class="communications-item-content">
+      
+  <h3>${wrapBanglaText(article.title)}</h3>
+  <p class="posted-on" style="font-weight:bold">${article.postedOn}</p>
+  <div>
+    <p class="verticals">${verticalsContent}${callerTypesContent}</p>
+
+  </div>
+  
+</div>
+
+        `;
+
+        li.addEventListener('click', () => showCommunicationArticle(article));
+        articleList.appendChild(li);
+      });
+
+      communicationsList.appendChild(articleList);
+    }
+
+
+    function showCommunicationArticle(article) {
+      document.getElementById('communications-section').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      document.getElementById('article-header').style.display = 'flex';
+      document.getElementById('header-title').textContent = article.title;
+
+      const content = document.getElementById('content');
+      content.innerHTML = `
+        <div class="custom-article">
+          <p class="posted-on">Posted on: ${article.postedOn}</p>
+          <p class="verticals">${article.verticals.map(v => `<span class="tab-button">${verticalEmojis[v] || ''} ${wrapBanglaText(v)}</span>`).join('')}${article.callerTypes.map(ct => `<span class="caller-type-button">${wrapBanglaText(ct)}</span>`).join('')}</p>
+          <div class="custom-sections">
+            ${wrapBanglaText(article.content)}
+          </div>
+        </div>
+      `;
+
+      if (article.relatedArticles && article.relatedArticles.length > 0) {
+        const relatedArticlesSection = document.createElement('div');
+        relatedArticlesSection.className = 'related-articles';
+        relatedArticlesSection.innerHTML = `
+          <h3>Related Articles 📖</h3>
+          <ul>
+            ${article.relatedArticles.map(relatedArticle => `
+              <li><a href="#" onclick="showRelatedArticle('${relatedArticle}'); return false;">${relatedArticle}</a></li>
+            `).join('')}
+          </ul>
+        `;
+        content.appendChild(relatedArticlesSection);
+      }
+    }
+
+    function showRelatedArticle(articleTitle) {
+      const article = articles.find(a => a.title === articleTitle) || communicationsArticles.find(a => a.title === articleTitle);
+      if (article) {
+        if (article.type === 'communication') {
+          showCommunicationArticle(article);
+        } else {
+          showArticle(articleTitle);
+        }
+      } else {
+        console.error('Related article not found:', articleTitle);
+      }
+    }
+
+    function goBack() {
+      if (document.getElementById('communications-section').style.display === 'block') {
+        goBackFromCommunications();
+      } else if (document.getElementById('content').style.display === 'block' && currentArticle && currentArticle.type === 'communication') {
+        goBackToCommunications();
+      } else {
+        document.getElementById('search-filters').style.display = 'block';
+        document.getElementById('article-header').style.display = 'none';
+        document.getElementById('tabs-container').style.display = 'none';
+        document.getElementById('caller-types-container').style.display = 'none';
+        document.getElementById('communications-section').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+        document.getElementById('search').focus();
+        renderArticleList();
+      }
+    }
+
+    function goToSearch() {
+      if (document.getElementById('communications-section').style.display === 'block' || 
+          (document.getElementById('content').style.display === 'block' && currentArticle && currentArticle.type === 'communication')) {
+        goToCommunicationsSearch();
+      } else {
+        goBack();
+        document.getElementById('search').focus();
+      }
+    }
+
+    function goBackFromCommunications() {
+      document.getElementById('search-filters').style.display = 'block';
+      document.getElementById('communications-section').style.display = 'none';
+      document.getElementById('content').style.display = 'block';
+      renderArticleList();
+    }
+
+    function goBackToCommunications() {
+      document.getElementById('communications-section').style.display = 'block';
+      document.getElementById('content').style.display = 'none';
+      document.getElementById('article-header').style.display = 'none';
+      renderCommunicationsList();
+    }
+
+    function goToCommunicationsSearch() {
+      document.getElementById('communications-section').style.display = 'block';
+      document.getElementById('content').style.display = 'none';
+      document.getElementById('article-header').style.display = 'none';
+      document.getElementById('communications-search').focus();
+    }
+
+    function viewImage(src) {
+      const modal = document.getElementById('image-modal');
+      const modalImage = document.getElementById('modal-image');
+      modal.style.display = 'block';
+      modalImage.src = src;
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('image-modal');
+      modal.style.display = 'none';
+    }
+
+    function goToSearch() {
+      if (document.getElementById('communications-section').style.display === 'block' || 
+          (document.getElementById('content').style.display === 'block' && currentArticle && currentArticle.type === 'communication')) {
+        goToCommunicationsSearch();
+      } else {
+        goBack();
+        document.getElementById('search').focus();
+      }
+    }
+
+    function wrapBanglaText(text) {
+      const banglaRegex = /[\u0980-\u09FF]+/g;
+      return text.replace(banglaRegex, match => `<span class="bangla">${match}</span>`);
+    }
+
+    fetchArticles();
+
+    console.log("Script connected to Google Sheets and functionality preserved.");
+  </script>
+</body>
+</html>
